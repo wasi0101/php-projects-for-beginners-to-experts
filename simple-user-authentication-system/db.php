@@ -6,7 +6,12 @@
 // no separate database server to install or configure - great for
 // learning how authentication works without extra setup.
 
-$dbFile = __DIR__ . '/data/users.sqlite';
+require __DIR__ . '/env.php';
+
+// DB_PATH can be overridden in .env - otherwise it defaults to the
+// bundled data/ folder. This is the same pattern you'd use for a real
+// secret: read it with getenv(), with a safe fallback if it's not set.
+$dbFile = getenv('DB_PATH') ?: __DIR__ . '/data/users.sqlite';
 
 $pdo = new PDO('sqlite:' . $dbFile);
 

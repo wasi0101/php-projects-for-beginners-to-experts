@@ -17,17 +17,42 @@ php -S localhost:8000
 Then open http://localhost:8000 in your browser. It'll take you to the
 login page — click "Sign up" to create your first account.
 
+## Environment variables (.env)
+
+This project has no real secrets today, but it's set up to show the
+pattern you'd use once it needs one (an API key, a mail provider token,
+etc.):
+
+```bash
+cp .env.example .env
+```
+
+- **`.env.example`** is committed to git — it lists which variables
+  exist, with no real values, as a template for anyone setting up the
+  project.
+- **`.env`** is your local copy with real values. It's listed in
+  `.gitignore`, so it never gets committed.
+- **`env.php`** reads `.env` at startup and loads each `NAME=value`
+  line into an environment variable, which PHP code then reads with
+  `getenv('NAME')` (see `db.php`, which reads `DB_PATH` this way).
+
+If you add a real secret later: put `NAME=the-real-value` in your local
+`.env`, add `NAME=` (blank) to `.env.example` as documentation, and read
+it with `getenv('NAME')` — never write the actual value into a `.php`
+file.
+
 ## Files
 
-| File          | Purpose                                                             |
-|---------------|----------------------------------------------------------------------|
-| `db.php`      | Connects to the SQLite database and creates the `users` table.       |
-| `register.php`| Form to create a new account.                                        |
-| `login.php`   | Form to log in with an existing account.                             |
-| `welcome.php` | The protected "Well done!" page — only visible when logged in.       |
-| `logout.php`  | Clears your session and signs you out.                               |
-| `index.php`   | Just redirects to the login page.                                    |
-| `style.css`   | Basic styling so the pages don't look bare.                          |
+| File            | Purpose                                                             |
+|-----------------|----------------------------------------------------------------------|
+| `db.php`        | Connects to the SQLite database and creates the `users` table.       |
+| `env.php`       | Loads variables from `.env` (see above).                             |
+| `register.php`  | Form to create a new account.                                        |
+| `login.php`     | Form to log in with an existing account.                             |
+| `welcome.php`   | The protected "Well done!" page — only visible when logged in.       |
+| `logout.php`    | Clears your session and signs you out.                               |
+| `index.php`     | Just redirects to the login page.                                    |
+| `style.css`     | Basic styling so the pages don't look bare.                          |
 
 The database file itself (`data/users.sqlite`) is created automatically
 the first time you load a page, and is not committed to git (see
