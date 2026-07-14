@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            padding-top: 60px;
+        }
+        .calculator {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            padding: 32px;
+            width: 320px;
+        }
+        h1 {
+            font-size: 20px;
+            margin-top: 0;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #333;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .result, .error {
+            display: none;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 15px;
+            text-align: center;
+        }
+        .result {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Simple Calculator</h1>
+
+        <div id="result" class="result"></div>
+        <div id="error" class="error"></div>
+
+        <form id="calc-form">
+            <label for="num1">First number</label>
+            <input type="text" id="num1" name="num1" required>
+
+            <label for="operator">Operation</label>
+            <select id="operator" name="operator">
+                <option value="+">+ Addition</option>
+                <option value="-">&minus; Subtraction</option>
+                <option value="*">&times; Multiplication</option>
+                <option value="/">&divide; Division</option>
+            </select>
+
+            <label for="num2">Second number</label>
+            <input type="text" id="num2" name="num2" required>
+
+            <button type="submit">Calculate</button>
+        </form>
+    </div>
+
+    <script>
+        const OP_LABELS = {
+            '+': 'Addition',
+            '-': 'Subtraction',
+            '*': 'Multiplication',
+            '/': 'Division',
+        };
+
+        document.getElementById('calc-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const num1Raw = document.getElementById('num1').value.trim();
+            const num2Raw = document.getElementById('num2').value.trim();
+            const operator = document.getElementById('operator').value;
+
+            const resultEl = document.getElementById('result');
+            const errorEl = document.getElementById('error');
+            resultEl.style.display = 'none';
+            errorEl.style.display = 'none';
+
+            const num1 = Number(num1Raw);
+            const num2 = Number(num2Raw);
+
+            if (num1Raw === '' || num2Raw === '' || Number.isNaN(num1) || Number.isNaN(num2)) {
+                errorEl.textContent = 'Please enter valid numbers in both fields.';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            let result;
+            switch (operator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    if (num2 === 0) {
+                        errorEl.textContent = 'Cannot divide by zero.';
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+                    result = num1 / num2;
+                    break;
+                default:
+                    errorEl.textContent = 'Please choose a valid operator.';
+                    errorEl.style.display = 'block';
+                    return;
+            }
+
+            resultEl.textContent = OP_LABELS[operator] + ' result: ' + result;
+            resultEl.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
